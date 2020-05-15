@@ -3,8 +3,6 @@
 #include "../src//board_read.h"
 #include "../src/board_start.h"
 #include "../src/board.h"
-#include "../src/board_read.h"
-
 #include "../thirdparty/ctest.h"
 
 CTEST(Syntax, Correct) {
