@@ -2,6 +2,7 @@
 #include "board_start.h"
 #include "board_print_plain.h"
 #include "board.h"
+
 int main() {
 	printf("Welcome to the game \"Chess\".\n"
 		   "To do at least, enter in the console \"start position of the turn and end position of the move\"\n"
