@@ -3,4 +3,4 @@
 
 void board_print_plain(char[8][8]);
 
-#endif //TRPO_CHESSVIZ_BOARD_PRINT_PLAIN_H
+#endif // TRPO_CHESSVIZ_BOARD_PRINT_PLAIN_H
