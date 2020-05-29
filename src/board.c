@@ -6,17 +6,19 @@
 
 void board(char deck[8][8])
 {
+    char* str = calloc(7, sizeof(char));
     int flag = 1;
     do {
-        char* input = board_read();
+        board_read(str);
         int move[4];
-        reformat_input(input, move);
-        free(input);
+        reformat_input(str, move);
+
         flag = check_move(deck, move);
         if (flag) {
             printf("Incorrect turn, try again\n");
         }
     } while (flag);
+    free(str);
 }
 
 int check_move(char deck[8][8], int move[])
