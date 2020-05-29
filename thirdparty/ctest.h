@@ -157,10 +157,6 @@ void assert_str(
         const char* exp, const char* real, const char* caller, int line);
 #define ASSERT_STR(exp, real) assert_str(exp, real, __FILE__, __LINE__)
 
-void assert_wstr(
-        const wchar_t* exp, const wchar_t* real, const char* caller, int line);
-#define ASSERT_WSTR(exp, real) assert_wstr(exp, real, __FILE__, __LINE__)
-
 void assert_data(
         const unsigned char* exp,
         size_t expsize,
@@ -236,7 +232,6 @@ void assert_dbl_far(
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <wchar.h>
 
 static size_t ctest_errorsize;
 static char* ctest_errormsg;
@@ -349,15 +344,6 @@ void assert_str(const char* exp, const char* real, const char* caller, int line)
     if ((exp == NULL && real != NULL) || (exp != NULL && real == NULL)
         || (exp && real && strcmp(exp, real) != 0)) {
         CTEST_ERR("%s:%d  expected '%s', got '%s'", caller, line, exp, real);
-    }
-}
-
-void assert_wstr(
-        const wchar_t* exp, const wchar_t* real, const char* caller, int line)
-{
-    if ((exp == NULL && real != NULL) || (exp != NULL && real == NULL)
-        || (exp && real && wcscmp(exp, real) != 0)) {
-        CTEST_ERR("%s:%d  expected '%ls', got '%ls'", caller, line, exp, real);
     }
 }
 
@@ -556,12 +542,10 @@ static void color_print(const char* color, const char* text)
 #include <signal.h>
 static void sighandler(int signum)
 {
-    const char msg_color[]
-            = ANSI_BRED "[SIGSEGV: Segmentation fault]" ANSI_NORMAL "\n";
-    const char msg_nocolor[] = "[SIGSEGV: Segmentation fault]\n";
-
-    const char* msg = color_output ? msg_color : msg_nocolor;
-    write(STDOUT_FILENO, msg, strlen(msg));
+    char msg[128];
+    snprintf(msg, sizeof(msg), "[SIGNAL %d: %s]", signum, sys_siglist[signum]);
+    color_print(ANSI_BRED, msg);
+    fflush(stdout);
 
     /* "Unregister" the signal handler and send the signal back to the process
      * so it can terminate as expected */
@@ -572,8 +556,7 @@ static void sighandler(int signum)
 
 int ctest_main(int argc, const char* argv[]);
 
-__attribute__((no_sanitize_address)) int
-ctest_main(int argc, const char* argv[])
+int ctest_main(int argc, const char* argv[])
 {
     static int total = 0;
     static int num_ok = 0;
