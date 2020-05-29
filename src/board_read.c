@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char* board_read()
+void board_read(char str[])
 {
-    char* str = static_cast<char*>(calloc(7, sizeof(char)));
     int flag;
     do {
         scanf("%6s", str);
@@ -13,7 +12,6 @@ char* board_read()
             printf("Incorrect input, try again\n");
         }
     } while (flag);
-    return str;
 }
 
 int check_input(char* str)
